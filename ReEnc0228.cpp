@@ -16,9 +16,9 @@ int main() {
 
     //基於指定參數加密上下文
     CCParams<CryptoContextCKKSRNS> parameters;
-    parameters.SetMultiplicativeDepth(multDepth);
-    parameters.SetScalingModSize(scaleModSize);
-    parameters.SetBatchSize(batchSize);
+    parameters.SetMultiplicativeDepth(multDepth);    //指定同態加密方案中的乘法深度
+    parameters.SetScalingModSize(scaleModSize);    //指定縮放因子的位元長度
+    parameters.SetBatchSize(batchSize);    //指定同態加密方案中密文中使用的明文槽的數量
 
     //生成加密上下文
     CryptoContext<DCRTPoly> cc = GenCryptoContext(parameters);
@@ -33,7 +33,7 @@ int main() {
     std::cout << "CKKS scheme is using ring dimension " << cc->GetRingDimension() << std::endl << std::endl;
 
     //生成加密密鑰
-    auto keys = cc->KeyGen();    //第一個加密金鑰對，用於加密和解密操作
+    auto keys = cc->KeyGen();    //第一個加密金鑰對，用於加密和解密操作 
     auto keys2 = cc->KeyGen();    //第二個加密金鑰對，用於代理重加密操作中轉換密文
     
     auto keysa = cc->KeyGen();    //加密金鑰對，用於代理重加密操作中的其他轉換
@@ -46,7 +46,7 @@ int main() {
     auto evalKey2 = cc->ReKeyGen(keys2.secretKey,keysa.publicKey);
 
     //生成乘法運算的密鑰
-    cc->EvalMultKeyGen(keys.secretKey);
+    cc->EvalMultKeyGen(keys.secretKey);   
     cc->EvalMultKeyGen(keysa.secretKey);
     cc->EvalMultKeyGen(keysb.secretKey);
 
